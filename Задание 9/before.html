@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Новостной портал — ДО оптимизации</title>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=block">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Roboto', Arial, sans-serif; background: #f4f4f4; }
+    header { background: #c0392b; color: white; padding: 20px; }
+    header h1 { font-size: 2rem; }
+    nav { background: #2c3e50; padding: 10px 20px; }
+    nav a { color: white; text-decoration: none; margin-right: 20px; font-size: 0.95rem; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+    .article-card { background: white; border-radius: 4px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+    .article-card img { width: 100%; display: block; }
+    .article-card .content { padding: 16px; }
+    .article-card h2 { font-size: 1.2rem; margin-bottom: 8px; }
+    .article-card p { color: #555; font-size: 0.9rem; line-height: 1.5; }
+    .sidebar { padding: 0; }
+    .widget { background: white; padding: 16px; margin-bottom: 20px; border-radius: 4px; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+    .widget h3 { font-size: 1rem; border-bottom: 2px solid #c0392b; padding-bottom: 8px; margin-bottom: 12px; }
+    .ad-block { width: 100%; height: 250px; background: #ddd; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; color: #999; margin-bottom: 20px; }
+    footer { background: #2c3e50; color: white; padding: 40px 20px; text-align: center; margin-top: 40px; }
+    .breaking { background: #e74c3c; color: white; padding: 8px 20px; font-size: 0.85rem; }
+    .tag { display: inline-block; background: #c0392b; color: white; font-size: 0.75rem; padding: 2px 8px; border-radius: 2px; margin-bottom: 8px; }
+    .meta { font-size: 0.8rem; color: #999; margin-top: 8px; }
+    .hero { position: relative; }
+    .hero img { width: 100%; height: 400px; object-fit: cover; }
+    .hero-caption { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,.6); color: white; padding: 20px; }
+    .hero-caption h2 { font-size: 1.5rem; margin-bottom: 8px; }
+    ul.news-list { list-style: none; }
+    ul.news-list li { padding: 10px 0; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+    ul.news-list li a { color: #2c3e50; text-decoration: none; }
+    ul.news-list li a:hover { color: #c0392b; }
+    .weather { text-align: center; padding: 10px 0; }
+    .weather .temp { font-size: 3rem; font-weight: bold; color: #2c3e50; }
+    .social-icons a { display: inline-block; margin: 0 5px; color: #555; font-size: 1.2rem; }
+    @media (max-width: 768px) { .container { grid-template-columns: 1fr; } .hero img { height: 220px; } }
+  </style>
+</head>
+<body>
+
+  <div class="breaking">🔴 СРОЧНО: Важные новости обновляются в режиме реального времени</div>
+
+  <header>
+    <h1>НовостиРФ — главные события дня</h1>
+  </header>
+
+  <nav>
+    <a href="#">Главная</a>
+    <a href="#">Политика</a>
+    <a href="#">Экономика</a>
+    <a href="#">Технологии</a>
+    <a href="#">Спорт</a>
+    <a href="#">Культура</a>
+  </nav>
+
+  <div class="container">
+    <main>
+      <div class="hero article-card">
+        <img src="https://picsum.photos/id/1/900/400" alt="Главная новость">
+        <div class="hero-caption">
+          <span class="tag">ГЛАВНОЕ</span>
+          <h2>Заголовок главной новости дня: важное событие произошло сегодня</h2>
+          <p class="meta">15 минут назад · Редакция НовостиРФ</p>
+        </div>
+      </div>
+
+      <div class="article-card">
+        <img src="https://picsum.photos/id/20/860/400" alt="Новость 1">
+        <div class="content">
+          <span class="tag">ПОЛИТИКА</span>
+          <h2>Крупное политическое событие привлекло внимание общественности</h2>
+          <p>Подробное описание события, которое произошло сегодня и вызвало широкое обсуждение в обществе. Эксперты дают различные оценки происходящему.</p>
+          <p class="meta">1 час назад · Иван Петров</p>
+        </div>
+      </div>
+
+      <div class="article-card">
+        <img src="https://picsum.photos/id/42/860/400" alt="Новость 2">
+        <div class="content">
+          <span class="tag">ЭКОНОМИКА</span>
+          <h2>Экономические показатели за первый квартал превысили прогнозы аналитиков</h2>
+          <p>Согласно официальным данным, опубликованным сегодня, ключевые экономические индикаторы продемонстрировали положительную динамику.</p>
+          <p class="meta">2 часа назад · Мария Сидорова</p>
+        </div>
+      </div>
+
+      <div class="article-card">
+        <img src="https://picsum.photos/id/60/860/400" alt="Новость 3">
+        <div class="content">
+          <span class="tag">ТЕХНОЛОГИИ</span>
+          <h2>Новая технологическая разработка изменит подход к обработке данных</h2>
+          <p>Исследователи представили прорывную технологию, которая обещает кардинально изменить подход к хранению и обработке больших объёмов данных.</p>
+          <p class="meta">3 часа назад · Алексей Козлов</p>
+        </div>
+      </div>
+
+      <div class="ad-block">[ РЕКЛАМА 728×90 ]</div>
+
+      <div class="article-card">
+        <img src="https://picsum.photos/id/96/860/400" alt="Новость 4">
+        <div class="content">
+          <span class="tag">СПОРТ</span>
+          <h2>Национальная сборная одержала уверенную победу в отборочном матче</h2>
+          <p>Сборная страны провела блестящий матч, показав высокий уровень игры. Счёт встречи отразил преимущество нашей команды на протяжении всей игры.</p>
+          <p class="meta">4 часа назад · Спортивная редакция</p>
+        </div>
+      </div>
+    </main>
+
+    <aside class="sidebar">
+      <div class="widget">
+        <h3>Погода в Москве</h3>
+        <div class="weather">
+          <div class="temp">+18°</div>
+          <p>Облачно с прояснениями</p>
+          <img src="https://picsum.photos/id/7/200/100" alt="погода">
+        </div>
+      </div>
+
+      <div class="ad-block">[ РЕКЛАМА 300×250 ]</div>
+
+      <div class="widget">
+        <h3>Самое читаемое</h3>
+        <ul class="news-list">
+          <li><a href="#">Первая популярная новость недели набрала рекорд просмотров</a></li>
+          <li><a href="#">Вторая важная тема вызвала дискуссию в социальных сетях</a></li>
+          <li><a href="#">Третья новость стала вирусной за несколько часов публикации</a></li>
+          <li><a href="#">Четвёртый материал прокомментировали тысячи читателей</a></li>
+          <li><a href="#">Пятый репортаж получил премию за качество журналистики</a></li>
+        </ul>
+      </div>
+
+      <div class="widget">
+        <h3>Мы в соцсетях</h3>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-vk"></i></a>
+          <a href="#"><i class="fab fa-telegram"></i></a>
+          <a href="#"><i class="fab fa-youtube"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+        </div>
+      </div>
+
+      <div class="ad-block">[ РЕКЛАМА 300×600 ]</div>
+    </aside>
+  </div>
+
+  <footer>
+    <p>© 2024 НовостиРФ. Все права защищены.</p>
+    <p style="margin-top:8px;font-size:0.8rem;color:#aaa;">Редакция не несёт ответственности за содержание рекламных материалов</p>
+  </footer>
+
+  <script>
+    window.onload = function() {
+      var items = document.querySelectorAll('.article-card');
+      for (var i = 0; i < items.length; i++) {
+        var h = items[i].offsetHeight;
+        items[i].setAttribute('data-height', h);
+      }
+      setTimeout(function() {
+        document.querySelector('.ad-block').style.height = '300px';
+      }, 1000);
+    };
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+
+</body>
+</html>
