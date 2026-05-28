@@ -1,0 +1,141 @@
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+
+  &__input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  &__box {
+    width: 20px;
+    height: 20px;
+    border: 2px solid $color-border;
+    border-radius: $radius-sm;
+    background-color: $color-bg;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: border-color $transition, background-color $transition, box-shadow $transition;
+
+    svg {
+      width: 12px;
+      height: 12px;
+      color: #fff;
+      opacity: 0;
+      transition: opacity $transition;
+    }
+  }
+
+  &__label {
+    font-size: $font-size-md;
+    color: $color-text;
+    line-height: 1.4;
+  }
+
+  &:hover &__box {
+    border-color: $color-primary;
+  }
+
+  &__input:checked + &__box {
+    background-color: $color-primary;
+    border-color: $color-primary;
+
+    svg { opacity: 1; }
+  }
+
+  &__input:focus-visible + &__box {
+    box-shadow: 0 0 0 3px rgba(37,99,235,.25);
+  }
+
+  &__input:disabled + &__box {
+    background-color: $color-disabled-bg;
+    border-color: $color-border;
+    cursor: not-allowed;
+  }
+
+  &__input:disabled + &__box + &__label {
+    color: $color-disabled-text;
+  }
+
+  &--disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+.radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+
+  &__input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  &__circle {
+    width: 20px;
+    height: 20px;
+    border: 2px solid $color-border;
+    border-radius: 50%;
+    background-color: $color-bg;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: border-color $transition, background-color $transition, box-shadow $transition;
+
+    &::after {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #fff;
+      opacity: 0;
+      transition: opacity $transition;
+    }
+  }
+
+  &__label {
+    font-size: $font-size-md;
+    color: $color-text;
+    line-height: 1.4;
+  }
+
+  &:hover &__circle {
+    border-color: $color-primary;
+  }
+
+  &__input:checked + &__circle {
+    background-color: $color-primary;
+    border-color: $color-primary;
+
+    &::after { opacity: 1; }
+  }
+
+  &__input:focus-visible + &__circle {
+    box-shadow: 0 0 0 3px rgba(37,99,235,.25);
+  }
+
+  &__input:disabled + &__circle {
+    background-color: $color-disabled-bg;
+    border-color: $color-border;
+    cursor: not-allowed;
+  }
+
+  &--disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}

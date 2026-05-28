@@ -1,0 +1,123 @@
+.navbar {
+  background-color: $color-navbar-bg;
+  color: $color-navbar-text;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: $shadow-md;
+
+  &__inner {
+    max-width: $container-max-width;
+    margin: 0 auto;
+    padding: 0 20px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  &__brand {
+    font-size: $font-size-xl;
+    font-weight: 700;
+    color: $color-navbar-text;
+    text-decoration: none;
+    flex-shrink: 0;
+    letter-spacing: -.02em;
+
+    span {
+      color: $color-primary;
+    }
+  }
+
+  &__menu {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    list-style: none;
+
+    @media (max-width: #{$breakpoint-md - 1px}) {
+      display: none;
+      position: absolute;
+      top: 60px;
+      left: 0;
+      right: 0;
+      background-color: #0f172a;
+      flex-direction: column;
+      align-items: stretch;
+      padding: 8px 0;
+      gap: 0;
+      box-shadow: $shadow-lg;
+    }
+
+    &--open {
+      @media (max-width: #{$breakpoint-md - 1px}) {
+        display: flex;
+      }
+    }
+  }
+
+  &__item {
+    position: relative;
+  }
+
+  &__link {
+    display: block;
+    padding: 8px 14px;
+    border-radius: $radius-sm;
+    color: rgba(255,255,255,.8);
+    font-size: $font-size-sm;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color $transition, color $transition;
+
+    &:hover {
+      background-color: rgba(255,255,255,.1);
+      color: #fff;
+      text-decoration: none;
+    }
+
+    &--active {
+      background-color: rgba(37,99,235,.3);
+      color: #fff;
+    }
+
+    @media (max-width: #{$breakpoint-md - 1px}) {
+      padding: 12px 20px;
+      border-radius: 0;
+    }
+  }
+
+  &__toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: $radius-sm;
+    transition: background-color $transition;
+
+    &:hover {
+      background-color: rgba(255,255,255,.1);
+    }
+
+    span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background-color: $color-navbar-text;
+      border-radius: 2px;
+      transition: transform $transition, opacity $transition;
+    }
+
+    @media (max-width: #{$breakpoint-md - 1px}) {
+      display: flex;
+    }
+
+    &--open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    &--open span:nth-child(2) { opacity: 0; }
+    &--open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  }
+}
