@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Прогресс-бар</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f1f5f9;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 48px 56px;
+      box-shadow: 0 4px 24px rgba(0,0,0,.08);
+      width: 480px;
+      text-align: center;
+    }
+
+    .card__title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 8px;
+    }
+
+    .card__subtitle {
+      font-size: 14px;
+      color: #94a3b8;
+      margin-bottom: 36px;
+    }
+
+    .progress-track {
+      background: #e2e8f0;
+      border-radius: 100px;
+      height: 12px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    #progress-bar {
+      height: 100%;
+      width: 0%;
+      border-radius: 100px;
+      background: linear-gradient(90deg, #3b82f6, #6366f1);
+      transition: width 0.5s ease;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 32px;
+    }
+
+    #progress-percent {
+      font-weight: 600;
+      color: #3b82f6;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 32px;
+      background: #3b82f6;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn:hover:not(:disabled) { background: #2563eb; }
+    .btn:active:not(:disabled) { transform: scale(0.97); }
+    .btn:disabled { background: #cbd5e1; cursor: not-allowed; }
+
+    .message {
+      margin-top: 24px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #22c55e;
+      min-height: 28px;
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .message--visible { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h1 class="card__title">Загрузка данных</h1>
+  <p class="card__subtitle">Асинхронная задача выполняется 5 секунд</p>
+
+  <div class="progress-track">
+    <div id="progress-bar"></div>
+  </div>
+
+  <div class="progress-meta">
+    <span id="progress-label">Ожидание...</span>
+    <span id="progress-percent">0%</span>
+  </div>
+
+  <button class="btn" id="start-btn">▶ Запустить</button>
+
+  <p class="message" id="message"></p>
+</div>
+
+<script>
+  const bar       = document.getElementById('progress-bar');
+  const percentEl = document.getElementById('progress-percent');
+  const labelEl   = document.getElementById('progress-label');
+  const messageEl = document.getElementById('message');
+  const startBtn  = document.getElementById('start-btn');
+
+  const TOTAL_SECONDS  = 5;
+  const STEP_PERCENT   = 100 / TOTAL_SECONDS;
+
+  const STEP_LABELS = [
+    'Подключение к серверу...',
+    'Получение данных...',
+    'Обработка ответа...',
+    'Проверка данных...',
+    'Финальная обработка...',
+  ];
+
+  function runProgress() {
+    startBtn.disabled = true;
+    messageEl.classList.remove('message--visible');
+    messageEl.textContent = '';
+
+    let elapsed = 0;
+
+    function tick() {
+      elapsed += 1;
+      const percent = Math.round(STEP_PERCENT * elapsed);
+
+      bar.style.width       = `${percent}%`;
+      percentEl.textContent = `${percent}%`;
+      labelEl.textContent   = STEP_LABELS[elapsed - 1] ?? 'Обработка...';
+
+      if (elapsed < TOTAL_SECONDS) {
+        setTimeout(tick, 1000);
+      } else {
+        labelEl.textContent       = 'Завершено';
+        messageEl.textContent     = '✓ Готово!';
+        messageEl.classList.add('message--visible');
+        startBtn.disabled         = false;
+
+        setTimeout(() => {
+          bar.style.width         = '0%';
+          percentEl.textContent   = '0%';
+          labelEl.textContent     = 'Ожидание...';
+          messageEl.classList.remove('message--visible');
+        }, 3000);
+      }
+    }
+
+    setTimeout(tick, 1000);
+  }
+
+  startBtn.addEventListener('click', runProgress);
+</script>
+
+</body>
+</html>

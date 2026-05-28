@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Тест реакции</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0f172a;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      color: #f8fafc;
+    }
+
+    .game {
+      text-align: center;
+      width: 480px;
+      padding: 16px;
+    }
+
+    .game__title {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+
+    .game__desc {
+      font-size: 15px;
+      color: #94a3b8;
+      margin-bottom: 48px;
+      line-height: 1.6;
+    }
+
+    .arena {
+      background: #1e293b;
+      border-radius: 20px;
+      padding: 48px 32px;
+      margin-bottom: 32px;
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      transition: background 0.3s;
+    }
+
+    .arena--active  { background: #14532d; }
+    .arena--too-early { background: #7f1d1d; }
+
+    .arena__status {
+      font-size: 18px;
+      font-weight: 600;
+      color: #cbd5e1;
+      min-height: 28px;
+    }
+
+    .arena__hint {
+      font-size: 13px;
+      color: #64748b;
+    }
+
+    .reaction-btn {
+      padding: 18px 56px;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.1s, background 0.2s, opacity 0.2s;
+      background: #334155;
+      color: #94a3b8;
+      letter-spacing: 0.3px;
+    }
+
+    .reaction-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    .reaction-btn--active {
+      background: #22c55e;
+      color: #fff;
+      box-shadow: 0 0 24px rgba(34,197,94,.4);
+    }
+
+    .reaction-btn--active:hover { background: #16a34a; }
+    .reaction-btn--active:active { transform: scale(0.96); }
+
+    .results {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .result-item {
+      background: #1e293b;
+      border-radius: 12px;
+      padding: 16px 8px;
+    }
+
+    .result-item__value {
+      font-size: 22px;
+      font-weight: 800;
+      color: #38bdf8;
+    }
+
+    .result-item__label {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 4px;
+    }
+
+    .start-btn {
+      padding: 14px 40px;
+      background: #3b82f6;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      width: 100%;
+    }
+
+    .start-btn:hover { background: #2563eb; }
+    .start-btn:active { transform: scale(0.98); }
+
+    .history {
+      margin-top: 24px;
+      text-align: left;
+    }
+
+    .history__title {
+      font-size: 13px;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 10px;
+    }
+
+    .history__list {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .history__item {
+      background: #1e293b;
+      border-radius: 6px;
+      padding: 4px 12px;
+      font-size: 13px;
+      color: #94a3b8;
+    }
+
+    .history__item--best { color: #22c55e; font-weight: 700; }
+
+    .badge {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 4px 14px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 700;
+      background: #fde68a;
+      color: #78350f;
+    }
+  </style>
+</head>
+<body>
+
+<div class="game">
+  <h1 class="game__title">⚡ Тест реакции</h1>
+  <p class="game__desc">
+    Дождитесь, когда кнопка станет зелёной, и нажмите её как можно быстрее.<br>
+    Задержка перед активацией — случайная, от 1 до 5 секунд.
+  </p>
+
+  <div class="arena" id="arena">
+    <div class="arena__status" id="status">Нажмите «Старт» для начала</div>
+    <button class="reaction-btn" id="reaction-btn" disabled>Нажми меня</button>
+    <div class="arena__hint" id="hint"></div>
+  </div>
+
+  <div class="results" id="results" style="display:none">
+    <div class="result-item">
+      <div class="result-item__value" id="last-time">—</div>
+      <div class="result-item__label">Последний</div>
+    </div>
+    <div class="result-item">
+      <div class="result-item__value" id="best-time">—</div>
+      <div class="result-item__label">Лучший</div>
+    </div>
+    <div class="result-item">
+      <div class="result-item__value" id="avg-time">—</div>
+      <div class="result-item__label">Средний</div>
+    </div>
+  </div>
+
+  <button class="start-btn" id="start-btn">▶ Старт</button>
+
+  <div class="history" id="history-block" style="display:none">
+    <div class="history__title">История попыток</div>
+    <ul class="history__list" id="history-list"></ul>
+  </div>
+</div>
+
+<script>
+  const arena       = document.getElementById('arena');
+  const statusEl    = document.getElementById('status');
+  const hintEl      = document.getElementById('hint');
+  const reactionBtn = document.getElementById('reaction-btn');
+  const startBtn    = document.getElementById('start-btn');
+  const resultsEl   = document.getElementById('results');
+  const lastTimeEl  = document.getElementById('last-time');
+  const bestTimeEl  = document.getElementById('best-time');
+  const avgTimeEl   = document.getElementById('avg-time');
+  const historyBlock = document.getElementById('history-block');
+  const historyList  = document.getElementById('history-list');
+
+  const State = { IDLE: 'idle', WAITING: 'waiting', ACTIVE: 'active' };
+
+  let currentState  = State.IDLE;
+  let activatedAt   = null;
+  let waitTimer     = null;
+  let attempts      = [];
+
+  function getRating(ms) {
+    if (ms < 180) return { text: '🏆 Реакция киберспортсмена!', cls: 'badge' };
+    if (ms < 250) return { text: '⚡ Отличная реакция!',        cls: 'badge' };
+    if (ms < 350) return { text: '👍 Хороший результат',        cls: 'badge' };
+    if (ms < 500) return { text: '🙂 Неплохо',                  cls: 'badge' };
+    return             { text: '🐢 Попробуйте ещё раз',          cls: 'badge' };
+  }
+
+  function updateStats(ms) {
+    attempts.push(ms);
+    const best = Math.min(...attempts);
+    const avg  = Math.round(attempts.reduce((a, b) => a + b, 0) / attempts.length);
+
+    lastTimeEl.textContent = `${ms} мс`;
+    bestTimeEl.textContent = `${best} мс`;
+    avgTimeEl.textContent  = `${avg} мс`;
+    resultsEl.style.display = 'grid';
+
+    historyBlock.style.display = 'block';
+    const li = document.createElement('li');
+    li.className = 'history__item' + (ms === best && attempts.length > 1 ? ' history__item--best' : '');
+    li.textContent = `${ms} мс`;
+    historyList.prepend(li);
+  }
+
+  function resetArena() {
+    arena.classList.remove('arena--active', 'arena--too-early');
+    reactionBtn.disabled = true;
+    reactionBtn.className = 'reaction-btn';
+    reactionBtn.textContent = 'Нажми меня';
+    hintEl.textContent = '';
+  }
+
+  function startWaiting() {
+    currentState = State.WAITING;
+    startBtn.disabled = true;
+    resetArena();
+
+    const delay = Math.floor(Math.random() * 4000) + 1000;
+    statusEl.textContent = 'Ждите... кнопка скоро станет зелёной';
+    hintEl.textContent   = 'Не нажимайте раньше времени!';
+
+    waitTimer = setTimeout(() => {
+      currentState = State.ACTIVE;
+      activatedAt  = performance.now();
+
+      arena.classList.add('arena--active');
+      statusEl.textContent          = 'ЖМИТЕ!';
+      hintEl.textContent            = '';
+      reactionBtn.disabled          = false;
+      reactionBtn.className         = 'reaction-btn reaction-btn--active';
+      reactionBtn.textContent       = '🟢 Нажми меня!';
+    }, delay);
+  }
+
+  reactionBtn.addEventListener('click', () => {
+    if (currentState === State.WAITING) {
+      clearTimeout(waitTimer);
+      currentState = State.IDLE;
+
+      arena.classList.add('arena--too-early');
+      statusEl.textContent    = '❌ Слишком рано!';
+      hintEl.textContent      = 'Нужно ждать, пока кнопка не загорится зелёным';
+      reactionBtn.disabled    = true;
+      startBtn.disabled       = false;
+      return;
+    }
+
+    if (currentState === State.ACTIVE) {
+      const elapsed = Math.round(performance.now() - activatedAt);
+      currentState  = State.IDLE;
+
+      const { text } = getRating(elapsed);
+
+      arena.classList.remove('arena--active');
+      statusEl.textContent      = `Ваше время: ${elapsed} мс`;
+      hintEl.innerHTML          = `<span class="badge">${text}</span>`;
+      reactionBtn.disabled      = true;
+      reactionBtn.className     = 'reaction-btn';
+      reactionBtn.textContent   = 'Нажми меня';
+      startBtn.disabled         = false;
+
+      updateStats(elapsed);
+    }
+  });
+
+  startBtn.addEventListener('click', startWaiting);
+</script>
+
+</body>
+</html>
